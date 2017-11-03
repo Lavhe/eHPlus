@@ -1,5 +1,5 @@
 # eHPlus
-Health management system
+## Health management system
 
 
 A system (website and a mobile app) which deals with ekurhukeni health challenges.
