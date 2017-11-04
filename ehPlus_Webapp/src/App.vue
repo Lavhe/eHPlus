@@ -171,6 +171,7 @@ export default {
         this.$router.push({
           name: 'Home'
         });
+        window.location.href = '/';
       }).catch(function(error) {
 
       });
