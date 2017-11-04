@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +17,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sivhabu.ekhack.MainActivity;
 import com.example.sivhabu.ekhack.R;
 import com.example.sivhabu.ekhack.map.MapsActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.util.Calendar;
@@ -31,10 +37,14 @@ public class BookAppointmentFragment extends Fragment  {
     private SearchableSpinner lblService,lblTImeSlot;
     private String[] adapterServices, adpaterTimeSlot;
     private TextView lblToBring;
+    private EditText txtOptMsg;
     private Button btnDate;
     private static TextView lblDateTime;
     private static Button btnBranch;
     private SharedPreferences pref;
+
+    private FirebaseAuth firebaseAuth;
+    final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
 
     //datetime picker stuff
     private View btnPickDate;
@@ -61,6 +71,16 @@ public class BookAppointmentFragment extends Fragment  {
         view  =  inflater.inflate(R.layout.fragment_book_appointment, container, false);
         ((MainActivity) getActivity()).setTitle("Book An Appointment");//sets action bar title
 
+        //firebase initialise
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        //if user already signed in
+        if (firebaseAuth.getCurrentUser() == null)
+        {
+            Intent intent = new Intent(getContext(),MainActivity.class);
+            startActivity(intent);
+        }
+
         //gui init
         lblService = (SearchableSpinner) view.findViewById(R .id.lblService);
         lblTImeSlot = (SearchableSpinner) view.findViewById(R.id.lblTImeSlot);
@@ -69,6 +89,7 @@ public class BookAppointmentFragment extends Fragment  {
         textView = (TextView) view.findViewById(R.id.text);
         lblDateTime = (TextView) view.findViewById(R.id.lblDateTime);
         btnBranch = (Button) view.findViewById(R.id.btnBranch);
+        txtOptMsg = (EditText) view.findViewById(R.id.txtOptMsg);
 
         lblToBring.setVisibility(View.GONE);
 
@@ -157,6 +178,7 @@ public class BookAppointmentFragment extends Fragment  {
                 "11:32 - 11:50",
                 "11:52 - 12:03",
                 "13:32 - 14:12",
+                "14:02 - 14:40",
 
         };
 
@@ -199,6 +221,23 @@ public class BookAppointmentFragment extends Fragment  {
             @Override
             public void onClick(View v) {
 
+                String splitted[]=lblTImeSlot.getSelectedItem().toString().split(" - ");
+
+               DatabaseReference newAppoiintment = ref.child("Appointment").push();
+                newAppoiintment.child("date").setValue(lblDateTime.getText());
+                newAppoiintment.child("description").setValue(txtOptMsg.getText().toString());
+                newAppoiintment.child("hospital").setValue(btnBranch.getText().toString());
+                newAppoiintment.child("patient_uid").setValue(firebaseAuth.getCurrentUser().getUid());
+                newAppoiintment.child("status").setValue("pending");
+                newAppoiintment.child("timeEnd").setValue(splitted[1]);
+                newAppoiintment.child("timeStart").setValue(splitted[1]);
+                newAppoiintment.child("type").setValue(lblService.getSelectedItem().toString());
+
+                Log.i("txtOptMsg.getT",txtOptMsg.getText().toString());
+                Toast.makeText(getContext(),"Appointment set",Toast.LENGTH_SHORT).show();
+                Fragment fragment = new NearByHospitalFragment();
+                FragmentManager fragmentManager =  getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.main, fragment).commit();
 
             }
         });
