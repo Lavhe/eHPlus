@@ -3,8 +3,8 @@
   <div class="content">
     <div id="login" class="p-8">
       <div class="form-wrapper md-elevation-8 p-8">
-        <div class="logo bg-secondary">
-          <span>F</span>
+        <div class="logo">
+          <img src="static/assets/logo.png" style="width:100%;height:100%" alt="">
         </div>
 
         <div class="title mt-4 mb-8">Log in to your account</div>
@@ -12,12 +12,12 @@
         <form novalidate>
 
           <div class="form-group mb-4">
-            <input v-model="UserEmail" type="email" class="form-control" id="loginFormInputEmail" aria-describedby="emailHelp" placeholder=" " />
+            <input v-on:keyup.enter="login" v-model="UserEmail" type="email" class="form-control" id="loginFormInputEmail" aria-describedby="emailHelp" placeholder=" " />
             <label for="loginFormInputEmail">Email address</label>
           </div>
 
           <div class="form-group mb-4">
-            <input v-model="UserPassword" type="password" class="form-control" id="loginFormInputPassword" placeholder="Password" />
+            <input v-on:keyup.enter="login" v-model="UserPassword" type="password" class="form-control" id="loginFormInputPassword" placeholder="Password" />
             <label for="loginFormInputPassword">Password</label>
           </div>
 
@@ -31,14 +31,14 @@
               </label>
             </div>
 
-            <a href="#" class="forgot-password text-secondary mb-4">Forgot Password?</a>
+            <a href="#" class="forgot-password redText mb-4">Forgot Password?</a>
           </div>
 
           <div v-if="LoginError.length > 0" class="mt-8 mb-6 mx-auto">
             <span class="text mr-sm-2 text-danger">{{ LoginError }}</span>
           </div>
 
-          <a type="button" role="button" v-on:click="login" class="submit-button btn btn-block btn-secondary my-4 mx-auto" aria-label="LOG IN">
+          <a type="button" role="button" v-on:click="login" class="submit-button btn btn-block redBg my-4 mx-auto" aria-label="LOG IN">
                   LOG IN
           </a>
 
@@ -46,7 +46,7 @@
 
         <div class="register d-flex flex-column flex-sm-row align-items-center justify-content-center mt-8 mb-6 mx-auto">
           <span class="text mr-sm-2">Don't have an account?</span>
-          <a class="link text-secondary" href="pages-auth-register.html">Create an account</a>
+          <a class="link redText" href="pages-auth-register.html">Create an account</a>
         </div>
 
       </div>
@@ -94,6 +94,7 @@ export default {
       function(user) {
         if (user) {
           firebase.database().ref('/User/' + user.uid + "/role").once('value').then(function(role) {
+            console.log(role.val() + " value");
             if (role.val() == 1) {
               //  Medical practitioner
               self.$router.push({
