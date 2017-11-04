@@ -149,6 +149,9 @@ public class LoginFragment extends Fragment {
                                                             .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                                             .child(Constants.ARG_FIREBASE_TOKEN)
                                                             .setValue(newToken);
+                                                    fragmentManager.beginTransaction().replace(R.id.main, fragment).commit();
+                                                    pbLogin.setVisibility(View.INVISIBLE);
+
                                                 }
 
                                             }
@@ -159,8 +162,7 @@ public class LoginFragment extends Fragment {
                                             }
                                         });
 
-                                        pbLogin.setVisibility(View.INVISIBLE);
-                                        fragmentManager.beginTransaction().replace(R.id.main, fragment).commit();
+
                                         Log.i("sdfsdfsdfsdf","sfsdf");
                                     }
 

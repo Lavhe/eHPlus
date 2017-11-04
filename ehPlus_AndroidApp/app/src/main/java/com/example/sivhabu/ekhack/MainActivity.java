@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sivhabu.ekhack.fragments.BookAppointmentFragment;
+import com.example.sivhabu.ekhack.fragments.FeedbackFragment;
 import com.example.sivhabu.ekhack.fragments.IndoorNavigationFragment;
 import com.example.sivhabu.ekhack.fragments.LoginFragment;
 import com.example.sivhabu.ekhack.fragments.NearByAmbulanceFragment;
@@ -164,6 +165,9 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_indoor_navigation) {
             fragment[0] = new IndoorNavigationFragment();
+        }
+        else if (id == R.id.nav_feedback) {
+            fragment[0] = new FeedbackFragment();
         }
         else if (id == R.id.nav_login) {
 fragment[0] = new LoginFragment();
