@@ -80,19 +80,32 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_near_hospitals) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_near_ambulance) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_qr_scanner) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_previous_medical_info) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_view_profile) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_book_appointment) {
 
         }
+        else if (id == R.id.nav_track_ambulance) {
+
+        }
+        else if (id == R.id.nav_indoor_navigation) {
+
+        }
+        else if (id == R.id.ic_person_black_24dp) {
+
+        }
+        else if (id == R.id.ic_power_settings_new_black_24dp) {
+
+        }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
