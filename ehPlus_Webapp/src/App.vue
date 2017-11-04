@@ -1,12 +1,198 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
-  </div>
+<div id="app">
+
+  <nav id="toolbar" class="fixed-top bg-white">
+
+    <div class="row no-gutters align-items-center flex-nowrap">
+
+      <div class="col">
+
+        <div class="row no-gutters align-items-center flex-nowrap">
+
+
+
+          <button type="button" class="toggle-aside-button btn btn-icon d-block d-lg-none" data-fuse-bar-toggle="aside">
+                           <i class="icon icon-menu"></i>
+                       </button>
+
+          <div class="toolbar-separator d-block d-lg-none"></div>
+
+
+
+
+          <div class="shortcuts-wrapper row no-gutters align-items-center px-0 px-sm-2">
+
+            <div class="shortcuts row no-gutters align-items-center d-none d-md-flex">
+
+              <a href="apps-chat.html" class="shortcut-button btn btn-icon mx-1">
+                               <i class="icon icon-hangouts"></i>
+                           </a>
+
+              <a href="apps-contacts.html" class="shortcut-button btn btn-icon mx-1">
+                               <i class="icon icon-account-box"></i>
+                           </a>
+
+              <a href="apps-mail.html" class="shortcut-button btn btn-icon mx-1">
+                               <i class="icon icon-email"></i>
+                           </a>
+
+            </div>
+
+            <div class="add-shortcut-menu-button dropdown px-1 px-sm-3">
+
+              <div class="dropdown-toggle btn btn-icon" role="button" id="dropdownShortcutMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="icon icon-star text-amber-600"></i>
+              </div>
+
+              <div class="dropdown-menu" aria-labelledby="dropdownShortcutMenu">
+
+                <a class="dropdown-item" href="#">
+                  <div class="row no-gutters align-items-center justify-content-between flex-nowrap">
+                    <div class="row no-gutters align-items-center flex-nowrap">
+                      <i class="icon icon-calendar-today"></i>
+                      <span class="px-3">Calendar</span>
+                    </div>
+                    <i class="icon icon-pin s-5 ml-2"></i>
+                  </div>
+                </a>
+
+                <a class="dropdown-item" href="#">
+                  <div class="row no-gutters align-items-center justify-content-between flex-nowrap">
+                    <div class="row no-gutters align-items-center flex-nowrap">
+                      <i class="icon icon-folder"></i>
+                      <span class="px-3">File Manager</span>
+                    </div>
+                    <i class="icon icon-pin s-5 ml-2"></i>
+                  </div>
+                </a>
+
+                <a class="dropdown-item" href="#">
+                  <div class="row no-gutters align-items-center justify-content-between flex-nowrap">
+                    <div class="row no-gutters align-items-center flex-nowrap">
+                      <i class="icon icon-checkbox-marked"></i>
+                      <span class="px-3">To-Do</span>
+                    </div>
+                    <i class="icon icon-pin s-5 ml-2"></i>
+                  </div>
+                </a>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="toolbar-separator"></div>
+
+        </div>
+      </div>
+
+      <div class="col-auto">
+
+        <div class="row no-gutters align-items-center justify-content-end">
+
+          <div class="user-menu-button dropdown" v-if="currentUser">
+
+            <div class="dropdown-toggle ripple row align-items-center no-gutters px-2 px-sm-4" role="button" id="dropdownUserMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <div class="avatar-wrapper">
+                <img class="avatar" src="static/assets/images/avatars/profile.jpg">
+                <i class="status text-green icon-checkbox-marked-circle s-4"></i>
+              </div>
+              <span class="username mx-3 d-none d-md-block">{{ currentUser.email }}</span>
+            </div>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownUserMenu">
+
+              <a class="dropdown-item" href="#">
+                <div class="row no-gutters align-items-center flex-nowrap">
+                  <i class="icon-account"></i>
+                  <span class="px-3">My Profile</span>
+                </div>
+              </a>
+
+              <a class="dropdown-item" href="#">
+                <div class="row no-gutters align-items-center flex-nowrap">
+                  <i class="icon-email"></i>
+                  <span class="px-3">Inbox</span>
+                </div>
+              </a>
+
+              <a class="dropdown-item" href="#">
+                <div class="row no-gutters align-items-center flex-nowrap">
+                  <i class="status text-green icon-checkbox-marked-circle"></i>
+                  <span class="px-3">Online</span>
+                </div>
+              </a>
+
+              <div class="dropdown-divider"></div>
+
+              <a class="dropdown-item" role="button" v-on:click="logOut" href="#">
+                <div class="row no-gutters align-items-center flex-nowrap">
+                  <i class="icon-logout"></i>
+                  <span class="px-3">Logout</span>
+                </div>
+              </a>
+            </div>
+          </div>
+          <button v-if="!currentUser" type="button" role="button" v-on:click="Login" class="search-button btn btn-icon">
+                  Log in
+          </button>
+
+          <div class="toolbar-separator"></div>
+
+          <button type="button" class="search-button btn btn-icon">
+                       <i class="icon icon-magnify"></i>
+          </button>
+
+          <div class="toolbar-separator"></div>
+
+          <button type="button" class="quick-panel-button btn btn-icon" data-fuse-bar-toggle="quick-panel-sidebar">
+              <i class="icon icon-format-list-bulleted"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <router-view/>
+</div>
 </template>
 
 <script>
+import firebase from 'firebase'
+
 export default {
-  name: 'app'
+  name: 'app',
+  data(){
+    return {
+      currentUser:false
+    }
+  },
+  methods:{
+    logOut(){
+      firebase.auth().signOut().then(function() {
+        this.$router.push({
+          name: 'Home'
+        });
+        window.location.href = '/';
+      }).catch(function(error) {
+
+      });
+    },
+    Login(){
+      this.$router.push({
+        name: 'Login'
+      });
+    }
+  },
+  mounted() {
+    //do something after mounting vue instance
+    var self = this;
+    firebase.auth().onAuthStateChanged(
+      function(user) {
+        if (user) {
+          self.currentUser = user;
+        }
+      });
+      console.log(this.currentUser);
+  }
+
 }
 </script>
