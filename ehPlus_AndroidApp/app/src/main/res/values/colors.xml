@@ -2,5 +2,14 @@
 <resources>
     <color name="colorPrimary">#ef3a4a</color>
     <color name="colorPrimaryDark">#ef3a4a</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#6b6b6b</color>
+    <color name="borderColor">#6b6b6b</color>
+    <color name="colorTextBox">#727272</color>
+    <color name="colorText">#6b6b6b</color>
+    <color name="colorGreenText">#3FB246</color>
+    <color name="colorRedText">#e12021</color>
+    <color name="colorReminderToday">#3ad142</color>
+    <color name="colorReminderClose">#e80c94</color>
+    <color name="colorReminderFar">#e89e0b</color>
+
 </resources>

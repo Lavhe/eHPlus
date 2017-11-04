@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.45"
         android:paddingTop="5dp"
-        android:text="ddsfsd"
+        android:text=""
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 </LinearLayout>
