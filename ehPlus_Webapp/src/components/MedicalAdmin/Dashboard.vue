@@ -8,15 +8,21 @@
 import firebase from 'firebase';
 
 export default {
-  name: 'MedicalprofessionalDashboard',
+  name: 'MedicalAdminDashboard',
   data () {
     return {
-      msg: 'Medical'
+      msg: 'Admin'
     }
   },
   mounted() {
     //do something after mounting vue instance
-    
+    firebase.auth().signInWithEmailAndPassword("mulavhe@gmail.com","123456").then(
+      function(user){
+          console.log(user.email);
+      },function(err){
+          alert(err);
+      }
+    );
   }
 
 }
