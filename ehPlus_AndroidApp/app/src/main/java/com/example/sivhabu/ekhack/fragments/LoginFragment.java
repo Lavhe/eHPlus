@@ -51,6 +51,10 @@ public class LoginFragment extends Fragment {
     private TextView lblForgot;
     final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     final DatabaseReference userTable = ref.child("User");
+    SharedPreferences pref = null;
+    SharedPreferences.Editor editor = null;
+    Fragment fragment = null;
+    android.support.v4.app.FragmentManager fragmentManager = null;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -62,6 +66,12 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_login, container, false);
+        ((MainActivity) getActivity()).setTitle("Sign in");//sets action bar title
+
+        pref = getContext().getSharedPreferences("MyPref", 0);
+        editor = pref.edit();
+        fragment = new NearByHospitalFragment();
+         fragmentManager =  getFragmentManager();
 
         //firebase initialise
         firebaseAuth = FirebaseAuth.getInstance();
@@ -106,6 +116,7 @@ public class LoginFragment extends Fragment {
                 }
                 else
                 {
+
                     Task<AuthResult> authResultTask = firebaseAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -117,17 +128,29 @@ public class LoginFragment extends Fragment {
                                         userTable.child(firebaseAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {//get member usernmae and image
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                                int user_role = dataSnapshot.child("user_role").getValue(Integer.class);
-                                                String pp = dataSnapshot.child("pp").getValue(String.class);
-                                                String name = dataSnapshot.child("name").getValue(String.class);
-                                                String surname = dataSnapshot.child("surname").getValue(String.class);
-                                                Log.i("user_role",user_role + "");
-                                                final SharedPreferences pref = getContext().getApplicationContext().getSharedPreferences("MyPref", 0);
-                                                final SharedPreferences.Editor editor = pref.edit();
-                                                editor.putInt("user_role",user_role);
-                                                editor.putString("pp",pp);
-                                                editor.putString("username",surname + " " + name);
-                                                editor.apply();
+
+                                                    int user_role = dataSnapshot.child("role").getValue(Integer.class);
+                                                    String pp = dataSnapshot.child("pp").getValue(String.class);
+                                                    String name = dataSnapshot.child("name").getValue(String.class);
+                                                    String surname = dataSnapshot.child("surname").getValue(String.class);
+                                                    Log.i("user_role", user_role + "");
+
+                                                    editor.putInt("user_role", user_role);
+                                                    editor.putString("pp", pp);
+                                                    editor.putString("username", surname + " " + name);
+                                                    editor.apply();
+
+                                                String newToken = FirebaseInstanceId.getInstance().getToken();
+                                                Log.d("TOKEN_SENT",newToken);
+                                                if (!newToken.isEmpty()) {
+                                                    FirebaseDatabase.getInstance()
+                                                            .getReference()
+                                                            .child("User")
+                                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                            .child(Constants.ARG_FIREBASE_TOKEN)
+                                                            .setValue(newToken);
+                                                }
+
                                             }
 
                                             @Override
@@ -137,30 +160,8 @@ public class LoginFragment extends Fragment {
                                         });
 
                                         pbLogin.setVisibility(View.INVISIBLE);
-                                        Fragment fragment = new NearbyHospitalFragment();
-                                        android.support.v4.app.FragmentManager fragmentManager =  getFragmentManager();;
                                         fragmentManager.beginTransaction().replace(R.id.main, fragment).commit();
-                                        try
-                                        {
-                                            // String token = new SharedPrefUtil(LogInActivity.this).getString(Constants.ARG_FIREBASE_TOKEN);
-                                            String newToken = FirebaseInstanceId.getInstance().getToken();
-                                            Log.d("TOKEN_SENT",newToken);
-                                            if (!newToken.isEmpty()) {
-                                                FirebaseDatabase.getInstance()
-                                                        .getReference()
-                                                        .child("User")
-                                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                        .child(Constants.ARG_FIREBASE_TOKEN)
-                                                        .setValue(newToken);
-                                            }
-
-                                        }catch (Exception ex)
-                                        {
-                                            ex.printStackTrace();
-                                            Toast.makeText(getContext(),"This device is unable to receive push notifications",Toast.LENGTH_SHORT).show();
-                                        }
-
-
+                                        Log.i("sdfsdfsdfsdf","sfsdf");
                                     }
 
                                     else

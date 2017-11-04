@@ -25,12 +25,15 @@ import com.example.sivhabu.ekhack.fragments.BookAppointmentFragment;
 import com.example.sivhabu.ekhack.fragments.IndoorNavigationFragment;
 import com.example.sivhabu.ekhack.fragments.LoginFragment;
 import com.example.sivhabu.ekhack.fragments.NearByAmbulanceFragment;
-import com.example.sivhabu.ekhack.fragments.NearbyHospitalFragment;
+import com.example.sivhabu.ekhack.fragments.NearByHospitalFragment;
 import com.example.sivhabu.ekhack.fragments.PreviousMedicalInfoFragment;
 import com.example.sivhabu.ekhack.fragments.ProfileFragment;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -41,6 +44,11 @@ public class MainActivity extends AppCompatActivity
     final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     final DatabaseReference userTable = ref.child("User");
     private FirebaseAuth firebaseAuth;
+
+    public static NavigationView getNavigationView() {
+        return navigationView;
+    }
+
     private static NavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +56,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
+        pref = getApplicationContext().getSharedPreferences("MyPref", 0);
 
       /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -63,7 +74,6 @@ public class MainActivity extends AppCompatActivity
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment;
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
         String stud_session =  pref.getString("studentId", null);
         //firebase initialise
         firebaseAuth = FirebaseAuth.getInstance();
@@ -71,7 +81,7 @@ public class MainActivity extends AppCompatActivity
         if (firebaseAuth.getCurrentUser() == null)
         {
             notSignedIn();
-            fragment = new NearbyHospitalFragment();
+            fragment = new NearByHospitalFragment();
             fragmentManager.beginTransaction().replace(R.id.main, fragment).commit();
         }
         else
@@ -86,7 +96,7 @@ public class MainActivity extends AppCompatActivity
             {
                 signedInAmbulanceDriver();
             }
-            fragment = new NearbyHospitalFragment();
+            fragment = new NearByHospitalFragment();
             fragmentManager.beginTransaction().replace(R.id.main, fragment).commit();
         }
 
@@ -138,41 +148,59 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = new NearbyHospitalFragment();
+        final Fragment[] fragment = {new NearByHospitalFragment()};
         if (id == R.id.nav_near_hospitals) {
-            fragment = new NearbyHospitalFragment();
+            fragment[0] = new NearByHospitalFragment();
         } else if (id == R.id.nav_near_ambulance) {
-            fragment = new NearByAmbulanceFragment();
+            fragment[0] = new NearByAmbulanceFragment();
         } else if (id == R.id.nav_qr_scanner) {
 
         } else if (id == R.id.nav_previous_medical_info) {
-            fragment = new PreviousMedicalInfoFragment();
+            fragment[0] = new PreviousMedicalInfoFragment();
         } else if (id == R.id.nav_view_profile) {
-            fragment = new ProfileFragment();
+            fragment[0] = new ProfileFragment();
         } else if (id == R.id.nav_book_appointment) {
-            fragment = new BookAppointmentFragment();
+            fragment[0] = new BookAppointmentFragment();
         }
         else if (id == R.id.nav_indoor_navigation) {
-            fragment = new IndoorNavigationFragment();
+            fragment[0] = new IndoorNavigationFragment();
         }
         else if (id == R.id.nav_login) {
-fragment = new LoginFragment();
+fragment[0] = new LoginFragment();
         }
         else if (id == R.id.nav_logout)
         {
             SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
             final SharedPreferences.Editor editor = pref.edit();
+            editor.remove("user_role").remove("username").remove("pp");
             editor.clear();
-            editor.commit();
-            fragment = new NearbyHospitalFragment();
+            editor.apply();
             notSignedIn();
             setNavTitle("Not signed in");
             setNavImg(null);
             Toast.makeText(getApplicationContext(),"Logging out",Toast.LENGTH_LONG).show();
-            firebaseAuth.signOut();
+            userTable.child(firebaseAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    try {
+                        userTable.child("firebaseToken").removeValue();
+                        firebaseAuth.signOut();
+                        fragment[0] = new LoginFragment();
+                    }
+                    catch(Exception ex){
+                        ex.printStackTrace();
+                        Toast.makeText(getApplicationContext(),"An error occurred during logout",Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
 
-        fragmentManager.beginTransaction().replace(R.id.main, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.main, fragment[0]).commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
