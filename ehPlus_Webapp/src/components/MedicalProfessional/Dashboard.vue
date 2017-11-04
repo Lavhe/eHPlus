@@ -32,7 +32,7 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link btn" id="budget-summary-tab" data-toggle="tab" href="#budget-summary-tab-pane" role="tab" aria-controls="budget-summary-tab-pane">Budget Summary</a>
+              <a class="nav-link btn" id="profile-tab" data-toggle="tab" href="#profile-tab-pane" role="tab" aria-controls="profile-tab-pane">Profile</a>
             </li>
 
             <li class="nav-item">
@@ -48,8 +48,8 @@
 
                   <!-- CONTENT -->
                   <div class="content">
-                    <div id="contacts" class="page-layout simple left-sidebar-floating">
-                      <div class="page-content p-4 p-sm-6">
+                    <div id="contacts" class="page-layout row simple">
+                      <div class="page-content col-12 col-lg-9 p-3">
                         <!-- CONTACT LIST -->
                         <div class="contacts-list card">
                           <!-- CONTACT LIST HEADER -->
@@ -99,10 +99,97 @@
                           <!-- CONTACT ITEM -->
                         </div>
                       </div>
+                      <div class="col-12 col-lg-3 p-3">
+
+                        <div class="widget widget6 card">
+
+                          <div class="widget-header px-4 row no-gutters align-items-center justify-content-between">
+
+                            <div class="col">
+                              <span class="h6">Patient's Profile</span>
+                            </div>
+
+                            <div class="">
+                              <select id="widget6-option-select" class="h6 custom-select">
+                                  <option selected="" value="TW">Basic</option>
+                                  <option value="LW">In detail</option>
+                              </select>
+                            </div>
+
+                          </div>
+
+                          <div class="widget-content">
+
+                            <div class="row no-gutters">
+
+                              <div class="col-12">
+
+                                <ul class="list-group dense">
+
+                                  <li class="list-group-item two-line">
+                                    <i class="icon icon-account"></i>
+                                    <div class="list-item-content">
+                                      <h3>Full name</h3>
+                                      <p>{{ selectedPatient.name }}</p>
+                                    </div>
+                                  </li>
+
+                                  <li class="list-group-item two-line">
+                                    <i class="icon icon-account-circle"></i>
+                                    <div class="list-item-content">
+                                      <h3>ID number</h3>
+                                      <p>{{ selectedPatient.id }}</p>
+                                    </div>
+                                  </li>
+
+                                  <li class="list-group-item two-line">
+                                    <i class="icon icon-medical-bag"></i>
+                                    <div class="list-item-content">
+                                      <h3>Blood Type</h3>
+                                      <p>{{ selectedPatient.bloodType }}</p>
+                                    </div>
+                                  </li>
+
+                                  <li class="list-group-item two-line">
+                                    <i class="icon icon-calendar-clock"></i>
+                                    <div class="list-item-content">
+                                      <h3>Recent Checkup date</h3>
+                                      <p>{{ selectedPatient.lastCheckupDate }}</p>
+                                    </div>
+                                  </li>
+                                </ul>
+
+
+                              </div>
+
+                              <div class="divider col-12"></div>
+
+                              <div id="added-tasks" class="col-6 d-flex flex-column align-items-center justify-content-center py-4">
+
+                                <div class="count h2">{{ selectedPatient.PendingAppointments }}</div>
+
+                                <div class="count-title">Pending Appointments</div>
+
+                              </div>
+
+                              <div id="completed-tasks" class="col-6 d-flex flex-column align-items-center justify-content-center py-4">
+
+                                <div class="count h2">{{ selectedPatient.hospitalVisits }}</div>
+
+                                <div class="count-title">Total Hospital visits</div>
+
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <a role="button" v-on:click="selectedOption = 0">Restart</a>
+                  <a role="button" class="pull-right btn btn-icon" v-on:click="selectedOption = 0">
+                    <i class="icon icon-close"></i>
+                  </a>
                 </div>
 
                 <div v-if="selectedOption == 2" class="col-12 col-sm-12 col-xl-9 p-9 row">
@@ -115,8 +202,37 @@
                   <a role="button" v-on:click="selectedOption = 0">Restart</a>
                 </div>
 
-                <div v-if="selectedOption == 0" class="col-12 col-sm-12 col-xl-9 p-9 row">
-                  <div class="col-12 col-sm-6 col-xl-4 p-4">
+                <div v-if="selectedOption == 0" class="col-12 col-sm-12 col-xl-12 row">
+
+                  <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="profile-box latest-activity card">
+                      <header class="row no-gutters align-items-center justify-content-between bg-secondary text-auto p-4">
+
+                        <div class="title h6">Closest upcoming appointments</div>
+
+                        <div class="more text-muted">See All</div>
+
+                      </header>
+                      <div class="content activities p-4">
+                        <div class="activity row no-gutters py-4 hoverable">
+                          <ul class="list-group dense">
+                            <li class="list-group-item three-line" v-if="DueAppointments.length > i" v-for="i in 1">
+                                <div class="avatar">
+                                    <img src="static/assets/images/avatars/1.jpg">
+                                </div>
+                                <div class="list-item-content">
+                                    <h3>{{ DueAppointments[i].PendingAppointmentID }}</h3>
+                                    <h4>{{ DueAppointments[i].Hospital }}</h4>
+                                    <p>{{  DueAppointments[i].DateTime }}</p>
+                                </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-sm-6 col-xl-3">
 
                     <div class="widget widget2 card hoverable" role="button" v-on:click="selectedOption = 1">
 
@@ -142,10 +258,8 @@
                       </div>
                     </div>
                   </div>
-                  <!-- / WIDGET 2 -->
 
-                  <!-- WIDGET 3 -->
-                  <div class="col-12 col-sm-6 col-xl-4 p-4">
+                  <div class="col-12 col-sm-6 col-xl-3">
 
                     <div class="widget widget3 card hoverable" role="button" v-on:click="selectedOption = 2">
 
@@ -172,10 +286,8 @@
                       </div>
                     </div>
                   </div>
-                  <!-- / WIDGET 3 -->
 
-                  <!-- WIDGET 4 -->
-                  <div class="col-12 col-sm-6 col-xl-4 p-4">
+                  <div class="col-12 col-sm-6 col-xl-3">
 
                     <div class="widget widget4 card hoverable" role="button" v-on:click="selectedOption = 3">
 
@@ -203,8 +315,12 @@
                     </div>
                   </div>
                 </div>
-                <!-- / WIDGET 4 -->
-                <div class="about col-12 col-sm-6 col-xl-3 p-3">
+              </div>
+            </div>
+            <div class="tab-pane fade show" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab">
+              <!-- / WIDGET 4 -->
+              <div class="row">
+                <div class="about col-12 col-sm-4 col-xl-3 p-3">
 
                   <div class="profile-box info-box general card mb-4">
 
@@ -248,6 +364,9 @@
                     </div>
                   </div>
 
+                </div>
+                <div class="about col-12 col-sm-4 col-xl-3 p-3">
+
                   <div class="profile-box info-box work card mb-4">
 
                     <header class="h6 bg-secondary text-auto p-4">
@@ -286,6 +405,9 @@
                     </div>
                   </div>
 
+                </div>
+                <div class="about col-12 col-sm-4 col-xl-3 p-3">
+
                   <div class="profile-box info-box contact card mb-4">
 
                     <header class="h6 bg-secondary text-auto p-4">
@@ -323,21 +445,18 @@
 
                       <div class="info-line mb-6">
                         <div class="title font-weight-bold mb-1">Emails</div>
-
                         <div class="info" ng-repeat="email in vm.about.contact.emails">
                           <span>mail@withinpixels.com</span>
                         </div>
-
                         <div class="info" ng-repeat="email in vm.about.contact.emails">
                           <span>mail@creapond.com</span>
                         </div>
-
                       </div>
-
                     </div>
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
@@ -361,6 +480,14 @@ export default {
   data() {
     return {
       currentUser: false,
+      selectedPatient: {
+        name: "Sirwali Joseph",
+        id: 8909056037087,
+        bloodType: "B",
+        lastCheckupDate: "date.now()",
+        PendingAppointments: 10,
+        hospitalVisits: 9
+      },
       selectedOption: 0,
       PendingAppointments: [{
         UserID: '1290',
@@ -376,6 +503,18 @@ export default {
         Type: 'CheckUp',
       }],
       DueAppointments: [{
+        PendingAppointmentID: '1290',
+        DateTime: "DateTime.now()",
+        DoctorID: '3456346',
+        Hospital: 'Netcare',
+      },
+      {
+        PendingAppointmentID: '1290',
+        DateTime: "DateTime.now()",
+        DoctorID: '3456346',
+        Hospital: 'Netcare',
+      },
+      {
         PendingAppointmentID: '1290',
         DateTime: "DateTime.now()",
         DoctorID: '3456346',
