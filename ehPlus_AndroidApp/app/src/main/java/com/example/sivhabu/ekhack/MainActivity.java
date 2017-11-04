@@ -99,10 +99,10 @@ public class MainActivity extends AppCompatActivity
         else if (id == R.id.nav_indoor_navigation) {
 
         }
-        else if (id == R.id.ic_person_black_24dp) {
+        else if (id == R.id.nav_login) {
 
         }
-        else if (id == R.id.ic_power_settings_new_black_24dp) {
+        else if (id == R.id.nav_logout) {
 
         }
 
