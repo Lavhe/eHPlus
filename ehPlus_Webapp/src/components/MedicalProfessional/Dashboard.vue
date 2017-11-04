@@ -42,49 +42,54 @@
                       <div class="contacts-list-header p-6">
                         <div class="row no-gutters align-items-center justify-content-between">
                           <div class="list-title redText">
-                            All pending Appointments ({{ PendingAppointments.length }})
+                            Pending Appointments ({{ PendingAppointments.length }})
                           </div>
                         </div>
                       </div>
                       <!-- / CONTACT LIST HEADER -->
                       <!-- CONTACT ITEM -->
-                      <div v-for="appointment in PendingAppointments" class="contact-item ripple row no-gutters align-items-center py-2 px-3 py-sm-4 px-sm-6">
+                      <div v-for="appointment in PendingAppointments" class="contact-item hoverable ripple row no-gutters align-items-center py-2 px-3 py-sm-4 px-sm-6">
 
-                        <img class="avatar mx-4" alt="Abbott" src="static/assets/images/avatars/Abbott.jpg" />
+                        <img class="avatar mx-4" alt="Abbott" :src="appointment.patient.pp" />
 
-                        <div class="col text-truncate font-weight-bold">Abbott Keitch</div>
-
+                        <div class="col text-truncate font-weight-bold">{{appointment.patient.name}}</a>
+                        </div>
 
                         <div class="col email text-truncate px-1 d-none d-xl-flex">
-                          {{ appointment.Description }}
+                          {{ appointment.description }}
                         </div>
 
                         <div class="col phone text-truncate px-1 d-none d-xl-flex">
-                          {{ appointment.PrefferedHospital }}
+                          {{ appointment.hospital }}
                         </div>
 
                         <div class="col job-title text-truncate px-1 d-none d-sm-flex">
-                          {{ appointment.PrefferedDate }}
+                          {{ appointment.date }}
+                        </div>
+
+                        <div class="col job-title text-truncate px-1 d-none d-sm-flex">
+                          {{ appointment.timeStart }} - {{ appointment.timeEnd }}
                         </div>
 
                         <div class="col company text-truncate px-1 d-none d-sm-flex">
-                          {{ appointment.Type }}
+                          {{ appointment.type }}
                         </div>
 
                         <div class="col-auto actions">
                           <div class="row no-gutters">
-                            <button type="button" class="btn btn-outline-success">
-                                    Accept
-                                </button>
-                            <button type="button" class="btn btn-outline-danger">
-                                    Decline
-                                </button>
+                            <button type="button" v-on:click="ApproveAppointment(appointment)" class="btn btn-outline-success">
+                                      Accept
+                                  </button>
+                              <button type="button" v-on:click="DeclineAppointment(appointment)" class="btn btn-outline-danger">
+                                      Decline
+                                  </button>
                           </div>
                         </div>
                       </div>
                       <!-- CONTACT ITEM -->
                     </div>
                   </div>
+
                   <div class="col-12 col-lg-3">
 
                     <div class="widget widget6 card">
@@ -196,7 +201,7 @@
 
                         <div class="row no-gutters">
 
-                          <div class="col-12">
+                          <div class="col-12" v-if="showMedicalHistory != patient.uid">
 
                             <ul class="list-group dense">
 
@@ -235,17 +240,54 @@
 
 
                           </div>
+                          <div class="" v-if="showMedicalHistory == patient.uid">
+                            <a href="#" role="button" v-on:click="showMedicalHistory = false"><i class="icon icon-close"></i></a>
+
+                            <ul class="list-group dense">
+
+                              <li class="list-group-item two-line">
+                                <i class="icon icon-account"></i>
+                                <div class="list-item-content">
+                                  <h3>Full name</h3>
+                                  <p>{{ patient.name }}</p>
+                                </div>
+                              </li>
+
+                              <li class="list-group-item three-line" v-for="MedicalHistory in patient.medicalHistories">
+                                <i class="icon icon-calendar-clock"></i>
+                                <div class="list-item-content">
+                                  <h3>{{ MedicalHistory.description }}</h3>
+                                  <h4>{{ MedicalHistory.date }} at {{ MedicalHistory.hospital }}</h4>
+                                  <p>{{ MedicalHistory.feedback }}</p>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
 
                           <div class="divider col-12"></div>
 
-                          <div class="col-auto actions">
+                          <div class="col-auto actions" v-if="updateMedicalHistory != patient.uid && showMedicalHistory != patient.uid">
                             <div class="row no-gutters">
-                              <button type="button" class="btn btn-outline-danger">
+                              <button type="button" v-on:click="showMedicalHistory = patient.uid" class="btn btn-outline-danger">
                                     View Medical history
                               </button>
-                              <button type="button" class="btn btn-outline-danger">
+                              <button type="button" v-on:click="updateMedicalHistory = patient.uid" class="btn btn-outline-danger">
                                     Update Medical Record
                               </button>
+                            </div>
+                          </div>
+                          <div v-if="updateMedicalHistory == patient.uid" class="col-auto actions">
+                            <div class="row no-gutters">
+                              <a href="#" role="button" v-on:click="updateMedicalHistory = false"><i class="icon icon-close"></i></a>
+                              <div class="form-group">
+                                <input v-model="NewAllergy" class="form-control" type="text" value="Artisanal kale" id="example-text-input" />
+                                <label for="example-text-input">New Allergy</label>
+                              </div>
+                              <div>
+                                <button type="button" v-on:click="saveAllergy" class="btn btn-outline-danger">
+                                    Add {{ NewAllergy }}
+                              </button>
+                              </div>
                             </div>
                           </div>
 
@@ -272,24 +314,83 @@
 
                 </div>
 
-                <div v-if="selectedOption == 3" class="col-12 col-sm-12 col-xl-9 p-9 row">
-                  Option three
-                  <a role="button" v-on:click="selectedOption = 0">Restart</a>
+                <div v-if="selectedOption == 3" class="col-12 col-sm-12 col-xl-12 p-9 row">
+                  <div class="page-content col-12 col-lg-12">
+                    <!-- CONTACT LIST -->
+                    <div class="contacts-list card">
+                      <!-- CONTACT LIST HEADER -->
+                      <div class="contacts-list-header p-6">
+                        <div class="row no-gutters align-items-center justify-content-between">
+                          <div class="list-title redText">
+                            Due Appointments ({{ DueAppointments.length }})
+                          </div>
+                        </div>
+                      </div>
+                      <!-- / CONTACT LIST HEADER -->
+                      <!-- CONTACT ITEM -->
+                      <div v-for="appointment in DueAppointments" class="contact-item hoverable ripple row no-gutters align-items-center py-2 px-3 py-sm-4 px-sm-6">
+
+                        <img class="avatar mx-4" alt="Abbott" :src="appointment.patient.pp" />
+
+                        <div class="col text-truncate font-weight-bold">{{appointment.patient.name}}</a>
+                        </div>
+
+                        <div class="col email text-truncate px-1 d-none d-xl-flex">
+                          {{ appointment.description }}
+                        </div>
+
+                        <div class="col phone text-truncate px-1 d-none d-xl-flex">
+                          {{ appointment.hospital }}
+                        </div>
+
+                        <div class="col job-title text-truncate px-1 d-none d-sm-flex">
+                          {{ appointment.date }}
+                        </div>
+
+                        <div class="col job-title text-truncate px-1 d-none d-sm-flex">
+                          {{ appointment.timeStart }} - {{ appointment.timeEnd }}
+                        </div>
+
+                        <div class="col company text-truncate px-1 d-none d-sm-flex">
+                          {{ appointment.type }}
+                        </div>
+
+                        <div class="col-auto actions">
+                          <div class="row no-gutters" v-if="addFeedback == appointment.id">
+                            <div class="form-group">
+                              <input v-model="Feedback" class="form-control" type="text" value="Artisanal kale" id="example-text-input2" />
+                              <label for="example-text-input2">FeedBack (Optional)</label>
+                            </div>
+                            <div>
+                              <button type="button" v-on:click="saveFeedBack(appointment)" class="btn btn-outline-danger">
+                                    Save Feedback
+                              </button>
+                            </div>
+                          </div>
+                          <div class="row no-gutters" v-if="addFeedback != appointment.id">
+                            <button type="button" v-on:click="addFeedback = appointment.id" class="btn btn-outline-danger">
+                                  Add Feedback
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- CONTACT ITEM -->
+                    </div>
+                  </div>
+
                 </div>
 
                 <div v-if="selectedOption == 4" class="row">
-                  <div id="calendar" class="page-layout simple full-width">
-                    <!-- CONTENT -->
-                    <div class="page-content p-6">
-                      <div id="calendar-view"></div>
+
+                  <div class="h5 mb-3">Pie Chart</div>
+                  <div class="card p-12 mb-12">
+                    <div id="pie-chart">
+                      <svg></svg>
                     </div>
-                    <!-- / CONTENT -->
                   </div>
                 </div>
 
                 <div v-if="selectedOption == 0" class="col-12 col-sm-12 col-xl-12 row">
-
-
                   <div class="col-12 col-sm-6 col-xl-3">
 
                     <div class="widget widget2 card hoverable" role="button" v-on:click="selectedOption = 1">
@@ -437,6 +538,13 @@
                 <div class="about col-12 col-sm-4 col-xl-3 p-3">
 
                   <div class="profile-box info-box general card mb-4">
+                    <img src="static/assets/images/avatars/profile.jpg" style="height:100%;width:100%" class="img-fluid img-responsive" alt="">
+                  </div>
+
+                </div>
+                <div class="about col-12 col-sm-4 col-xl-3 p-3">
+
+                  <div class="profile-box info-box general card mb-4">
 
                     <header class="h6 redBg text-auto p-4">
                       <div class="title text-white">General Information</div>
@@ -445,34 +553,31 @@
                     <div class="content p-4">
 
                       <div class="info-line mb-6">
-                        <div class="title font-weight-bold mb-1">Gender</div>
-                        <div class="info">Female</div>
+                        <div class="title font-weight-bold mb-1">Surname and Name</div>
+
+                        <div class="info">
+                          <span>Sirwali</span>
+                        </div>
+
+                        <div class="info">
+                          <span>Mulavhe Joseph</span>
+                        </div>
                       </div>
 
+
                       <div class="info-line mb-6">
-                        <div class="title font-weight-bold mb-1">Birthday</div>
-                        <div class="info">12.01.1987</div>
+                        <div class="title font-weight-bold mb-1">ID number</div>
+                        <div class="info">96081521474008</div>
                       </div>
 
                       <div class="info-line mb-6">
                         <div class="title font-weight-bold mb-1">Locations</div>
 
                         <div class="info location">
-                          <span>Istanbul, Turkey</span>
+                          <span>Ekurhuleni , Johannesburg</span>
                           <i class="icon-map-marker s-4"></i>
                         </div>
 
-                        <div class="info location">
-                          <span>New York, USA</span>
-                          <i class="icon-map-marker s-4"></i>
-                        </div>
-
-                      </div>
-
-                      <div class="info-line">
-                        <div class="title font-weight-bold mb-1">About Me</div>
-                        <div class="info">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget pharetra felis, sed ullamcorper dui. Sed et elementum neque. Vestibulum pellente viverra ultrices. Etiam justo augue, vehicula ac gravida a, interdum sit amet nisl.
-                          Integer vitae nisi id nibh dictum mollis in vitae tortor.</div>
                       </div>
 
                     </div>
@@ -491,29 +596,25 @@
 
                       <div class="info-line mb-6">
                         <div class="title font-weight-bold mb-1">Occupation</div>
-                        <div class="info">Developer</div>
+                        <div class="info">Doctor</div>
                       </div>
 
                       <div class="info-line mb-6">
                         <div class="title font-weight-bold mb-1">Skills</div>
-                        <div class="info">C#, PHP, Javascript, Angular, JS, HTML, CSS</div>
+                        <div class="info">Dentist, GP</div>
                       </div>
 
                       <div class="info-line mb-6">
-                        <div class="title font-weight-bold mb-1">Jobs</div>
-                        <table class="info jobs">
+                        <div class="title font-weight-bold mb-1">Hospitals</div>
 
-                          <tr class="job">
-                            <td class="company font-weight-bold pr-4">Self-Employed</td>
-                            <td class="date">2010 - Now</td>
-                          </tr>
+                        <div class="info">
+                          <span>Tshilidzini</span>
+                        </div>
 
-                          <tr class="job">
-                            <td class="company font-weight-bold pr-4">Google</td>
-                            <td class="date">2008 - 2010</td>
-                          </tr>
+                        <div class="info">
+                          <span>Netcare</span>
+                        </div>
 
-                        </table>
                       </div>
 
                     </div>
@@ -529,12 +630,6 @@
                     </header>
 
                     <div class="content p-4">
-
-                      <div class="info-line mb-6">
-                        <div class="title font-weight-bold mb-1">Address</div>
-                        <div class="info">Ut pharetra luctus est quis sodales. Duis nisi tortor, bibendum eget tincidunt, aliquam ac elit. Mauris nec euismod odio.</div>
-                      </div>
-
                       <div class="info-line mb-6">
                         <div class="title font-weight-bold mb-1">Tel.</div>
 
@@ -558,13 +653,8 @@
                       </div>
 
                       <div class="info-line mb-6">
-                        <div class="title font-weight-bold mb-1">Emails</div>
-                        <div class="info" ng-repeat="email in vm.about.contact.emails">
-                          <span>mail@withinpixels.com</span>
-                        </div>
-                        <div class="info" ng-repeat="email in vm.about.contact.emails">
-                          <span>mail@creapond.com</span>
-                        </div>
+                        <div class="title font-weight-bold mb-1">Email</div>
+                        <div class="info">mulavhe@gmail.com</div>
                       </div>
                     </div>
                   </div>
@@ -592,6 +682,11 @@ export default {
   name: 'MedicalprofessionalDashboard',
   data() {
     return {
+      showMedicalHistory: false,
+      updateMedicalHistory: false,
+      NewAllergy: '',
+      Feedback: '',
+      addFeedback: false,
       currentUser: false,
       selectedPatient: {
         name: "Sirwali Joseph",
@@ -602,70 +697,158 @@ export default {
         hospitalVisits: 9
       },
       selectedOption: 0,
-      PendingAppointments: [{
-        UserID: '1290',
-        Description: 'I have a tooth ache',
-        PrefferedHospital: 'Tshilidzini',
-        PrefferedDate: "DateTime.now()",
-        Type: 'CheckUp',
-      }, {
-        UserID: '2290',
-        Description: 'I think i am pregnant',
-        PrefferedHospital: 'Netcare',
-        PrefferedDate: "DateTime.now()",
-        Type: 'CheckUp',
-      }],
-      DueAppointments: [{
-          PendingAppointmentID: '1290',
-          DateTime: "DateTime.now()",
-          DoctorID: '3456346',
-          Hospital: 'Netcare',
+      PendingAppointments: [],
+      DueAppointments: [],
+      Patients: [{
+          name: "Sirwali Joseph",
+          uid: 'safasgsaga',
+          id: 8909056037087,
+          bloodType: "B",
+          lastCheckupDate: "date.now()",
+          PendingAppointments: 10,
+          hospitalVisits: 9,
+          medicalHistories: [{
+            date: "dateTime.now()",
+            hospital: "Tshilidzini",
+            description: "I have a flue",
+            feedback: "Your flue will be ohk"
+          }, {
+            date: "dateTime.now()",
+            hospital: "Tshilidzini",
+            description: "I have a flue",
+            feedback: "Your flue will be ohk"
+          }, {
+            date: "dateTime.now()",
+            hospital: "Tshilidzini",
+            description: "I have a flue",
+            feedback: "Your flue will be ohk"
+          }, {
+            date: "dateTime.now()",
+            hospital: "Tshilidzini",
+            description: "I have a flue",
+            feedback: "Your flue will be ohk"
+          }]
         },
         {
-          PendingAppointmentID: '1290',
-          DateTime: "DateTime.now()",
-          DoctorID: '3456346',
-          Hospital: 'Netcare',
+          name: "Ndou Terrence",
+          id: 9909056037087,
+          uid: 'safasgsagafas',
+          bloodType: "B",
+          lastCheckupDate: "date.now()",
+          PendingAppointments: 100,
+          hospitalVisits: 91,
+          medicalHistories: [{
+            date: "dateTime.now()",
+            hospital: "Tshilidzini",
+            description: "I have a flue",
+            feedback: "Your flue will be ohk"
+          }]
+        }, {
+          name: "Murendeni Muthambi",
+          id: 8309056037087,
+          uid: 'safasgs213a',
+          bloodType: "O",
+          lastCheckupDate: "date.now()",
+          PendingAppointments: 0,
+          hospitalVisits: 21,
+          medicalHistories: [{
+            date: "dateTime.now()",
+            hospital: "Tshilidzini",
+            description: "I have a flue",
+            feedback: "Your flue will be ohk"
+          }]
         }
       ],
-      Patients: [
-      {
-        name: "Sirwali Joseph",
-        id: 8909056037087,
-        bloodType: "B",
-        lastCheckupDate: "date.now()",
-        PendingAppointments: 10,
-        hospitalVisits: 9
-      },
-      {
-       name: "Ndou Terrence",
-       id: 9909056037087,
-       bloodType: "B",
-       lastCheckupDate: "date.now()",
-       PendingAppointments: 100,
-       hospitalVisits: 91
-     }, {
-       name: "Murendeni Muthambi",
-       id: 8309056037087,
-       bloodType: "O",
-       lastCheckupDate: "date.now()",
-       PendingAppointments: 0,
-       hospitalVisits: 21
-     }],
       Hospitals: ['Helen Joseph', 'Tshilidzini']
     }
   },
   methods: {
-    readAppointmentsPending(){
+    saveAllergy() {
+      //NewAllergy
+      var self = this;
+      if (self.NewAllergy.length > 2) {
 
+        if (self.currentUser.allergies) {
+
+          self.currentUser.allergies.push(self.NewAllergy);
+
+        } else {
+
+          self.currentUser.allergies = [self.NewAllergy];
+        }
+        firebase.database().ref('User/' + self.currentUser.uid).update({
+          allergies: self.currentUser.allergies,
+        });
+
+        this.updateMedicalHistory = false;
+        this.NewAllergy = '';
+
+      }
+    },
+    saveFeedBack(appointment) {
+      var self = this;
+      firebase.database().ref('Appointment/' + appointment.id).update({
+        status: "solved",
+        feedback: self.Feedback
+      });
+      this.readDueAppointments();
+    },
+    ApproveAppointment(appointment) {
+      // A post entry.
+      firebase.database().ref('Appointment/' + appointment.id).update({
+        status: "approved",
+        doctor_uid: this.currentUser.uid
+      });
+      this.readAppointmentsPending();
+    },
+    DeclineAppointment(appointment) {
+      // A post entry.
+      firebase.database().ref('Appointment/' + appointment.id).update({
+        status: "declined",
+        doctor_uid: this.currentUser.uid
+      });
+      this.readAppointmentsPending();
+    },
+    readDueAppointments() {
+      var self = this;
+      this.DueAppointments = [];
+      firebase.database().ref('/Appointment').once('value').then(function(role) {
+        $.map(role.val(), function(value, index) {
+          if (value.status == "approved") {
+            firebase.database().ref('/User/' + value.patient_uid).once('value').then(function(user) {
+              value.patient = user.val();
+              value.id = index;
+              self.DueAppointments.push(value);
+            });
+          }
+        });
+      });
+    },
+    readAppointmentsPending() {
+      var self = this;
+      this.PendingAppointments = [];
+      firebase.database().ref('/Appointment').once('value').then(function(role) {
+        $.map(role.val(), function(value, index) {
+          if (value.status == "pending") {
+            firebase.database().ref('/User/' + value.patient_uid).once('value').then(function(user) {
+              value.patient = user.val();
+              value.id = index;
+              self.PendingAppointments.push(value);
+            });
+          }
+        });
+      });
     }
   },
   mounted() {
     //do something after mounting vue instance
+    this.selectedPatient = this.Patients[0];
     var self = this;
     firebase.auth().onAuthStateChanged(
       function(user) {
         if (user) {
+          self.readAppointmentsPending();
+          self.readDueAppointments();
           self.currentUser = user;
         }
       });
