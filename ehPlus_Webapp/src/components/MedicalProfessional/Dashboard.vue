@@ -80,7 +80,7 @@
                             <button type="button" v-on:click="ApproveAppointment(appointment)" class="btn btn-outline-success">
                                       Accept
                                   </button>
-                              <button type="button" v-on:click="DeclineAppointment(appointment)" class="btn btn-outline-danger">
+                            <button type="button" v-on:click="DeclineAppointment(appointment)" class="btn btn-outline-danger">
                                       Decline
                                   </button>
                           </div>
@@ -380,16 +380,33 @@
 
                 </div>
 
-                <div v-if="selectedOption == 4" class="row">
+                <div v-if="selectedOption == 4" class="col-12 col-sm-12 col-xl-12 row">
+                  <div class="page-content col-12 col-lg-12">
+                    <!-- CONTACT LIST -->
+                    <div class="contacts-list card row">
+                      <div class="col-xs-3">
+                        <div class="widget widget2 card hoverable" role="button" v-on:click="selectedOption = 1">
+                          <div class="widget-content pt-2 pb-8 d-flex flex-column align-items-center justify-content-center">
 
-                  <div class="h5 mb-3">Pie Chart</div>
-                  <div class="card p-12 mb-12">
-                    <div id="pie-chart">
-                      <svg></svg>
+                            <ul class="list-group dense">
+                              <li v-for="hospital in Hospitals" class="list-group-item">
+                                <i class="icon icon-account"></i>
+                                <div class="list-item-content">
+                                  <h3>{{ hospital }}</h3>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-xs-9">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d114493.6421268819!2d28.0568346562019!3d-26.264054721127412!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1serkurhuleni+hospitals!5e0!3m2!1sen!2sza!4v1509821246835" width="100%" height="500"
+                          frameborder="0" style="border:0" allowfullscreen>
+                        </iframe>
+                      </div>
                     </div>
                   </div>
                 </div>
-
                 <div v-if="selectedOption == 0" class="col-12 col-sm-12 col-xl-12 row">
                   <div class="col-12 col-sm-6 col-xl-3">
 
@@ -502,33 +519,6 @@
                       </div>
                     </div>
                   </div>
-
-                  <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="profile-box latest-activity card">
-                      <header class="row no-gutters align-items-center justify-content-between redBg text-auto p-4">
-
-                        <div class="title text-white h6">Closest upcoming appointments</div>
-
-                      </header>
-                      <div class="content activities p-4">
-                        <div class="activity row no-gutters py-4 hoverable">
-                          <ul class="list-group dense">
-                            <li class="list-group-item three-line" v-if="DueAppointments.length > i" v-for="i in 3">
-                              <div class="avatar">
-                                <img src="static/assets/images/avatars/1.jpg">
-                              </div>
-                              <div class="list-item-content">
-                                <h3>{{ DueAppointments[i].PendingAppointmentID }}</h3>
-                                <h4>{{ DueAppointments[i].Hospital }}</h4>
-                                <p>{{ DueAppointments[i].DateTime }}</p>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
                 </div>
               </div>
             </div>
