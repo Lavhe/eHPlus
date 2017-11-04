@@ -12,11 +12,10 @@ import com.example.sivhabu.ekhack.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NearByHospitalFragment extends Fragment {
+public class IndoorNavigationFragment extends Fragment {
 
-    private View view;
 
-    public NearByHospitalFragment() {
+    public IndoorNavigationFragment() {
         // Required empty public constructor
     }
 
@@ -25,8 +24,7 @@ public class NearByHospitalFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_near_by_hospital, container, false);
-        return  view;
+        return inflater.inflate(R.layout.fragment_indoor_navigation, container, false);
     }
 
 }
