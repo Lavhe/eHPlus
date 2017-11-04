@@ -1,6 +1,6 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
+  <div>
+    
   </div>
 </template>
 
@@ -14,9 +14,12 @@ export default {
       msg: 'Medical'
     }
   },
+  methods:{
+
+  },
   mounted() {
     //do something after mounting vue instance
-    
+
   }
 
 }

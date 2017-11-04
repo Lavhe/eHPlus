@@ -1,6 +1,8 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
+  <div>
+    <div v-if="currentUser">
+      {{ currentUser.email }}
+    </div>
   </div>
 </template>
 
@@ -11,18 +13,21 @@ export default {
   name: 'MedicalAdminDashboard',
   data () {
     return {
-      msg: 'Admin'
+      currentUser:false
     }
+  },
+  methods:{
+
   },
   mounted() {
     //do something after mounting vue instance
-    firebase.auth().signInWithEmailAndPassword("mulavhe@gmail.com","123456").then(
-      function(user){
-          console.log(user.email);
-      },function(err){
-          alert(err);
-      }
-    );
+    var self = this;
+    firebase.auth().onAuthStateChanged(
+      function(user) {
+        if (user) {
+          self.currentUser = user;
+        }
+    });
   }
 
 }
