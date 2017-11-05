@@ -33,7 +33,14 @@
 
               <div class="widget-content p-4">
 
-                <div class="py-4 row no-gutters align-items-center justify-content-between">
+                <div class="col-xs-9">
+                  <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d114493.6421268819!2d28.0568346562019!3d-26.264054721127412!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1serkurhuleni+hospitals!5e0!3m2!1sen!2sza!4v1509821246835" width="100%" height="250"
+                    frameborder="0" style="border:0" allowfullscreen>
+                  </iframe>
+                </div>
+
+                <!-- <div class="py-4 row no-gutters align-items-center justify-content-between">
+
 
                   <div class="col">
 
@@ -91,7 +98,8 @@
                                    <i class="icon icon-dots-vertical"></i>
                                </button>
                   </div>
-                </div>
+                </div> -->
+
               </div>
             </div>
           </div>
@@ -125,7 +133,7 @@
 
                   <div id="added-tasks" class="col-6 d-flex flex-column align-items-center justify-content-center py-4">
 
-                    <div class="count h2">5</div>
+                    <div class="count h2">50</div>
 
                     <div class="count-title">Total Doctors</div>
 
@@ -133,7 +141,7 @@
 
                   <div id="completed-tasks" class="col-6 d-flex flex-column align-items-center justify-content-center py-4">
 
-                    <div class="count h2">10</div>
+                    <div class="count h2">215</div>
 
                     <div class="count-title">Total Ambulances</div>
 
@@ -150,7 +158,7 @@
 
                 <div class="col">
                   <br />
-                  <span class="h4">Hospital Progress</span>
+                  <span class="h4">Hospital Visits</span>
                 </div>
               </div>
 
