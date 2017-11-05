@@ -10565,7 +10565,7 @@ to{background-position:0 0}
 #calendar .page-content #calendar-view.fc .fc-agenda-view .fc-day,#calendar .page-content #calendar-view.fc .fc-agenda-view .fc-week{height:10rem!important}
 #calendar .page-content #calendar-view.fc .fc-agenda-view .fc-widget-content{height:5rem}
 #calendar .page-content #calendar-view.fc .fc-agenda-view .fc-axis{padding-left:2.4rem}
-#profile .page-header{height:32rem;min-height:32rem;max-height:32rem;background:url(../images/backgrounds/march.jpg) 0 45% no-repeat;background-size:100% auto}
+#profile .page-header{height:32rem;min-height:32rem;max-height:32rem;background-size:100% auto}
 #profile #timeline-tab-pane .timeline .timeline-item .post-media .media-img,#profile #timeline-tab-pane .timeline .timeline-item .post-media iframe{max-width:100%}
 #profile #photos-videos-tab-pane .period .period-media .media{position:relative;width:200px}
 #profile #photos-videos-tab-pane .period .period-media .media .title{position:absolute;bottom:0;left:0;right:0;z-index:10;background:rgba(0,0,0,.54);color:#fff}
