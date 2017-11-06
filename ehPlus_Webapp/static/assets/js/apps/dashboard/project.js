@@ -86,7 +86,7 @@
             "mainChart" : {
                 "2W": [
                     {
-                        "key"   : "Closed Issues",
+                        "key"   : "Adult",
                         "values": [
                             {
                                 "x": "Mon",
@@ -119,7 +119,7 @@
                         ]
                     },
                     {
-                        "key"   : "Issues",
+                        "key"   : "Youth",
                         "values": [
                             {
                                 "x": "Mon",
@@ -154,7 +154,7 @@
                 ],
                 "LW": [
                     {
-                        "key"   : "Closed Issues",
+                        "key"   : "Adult",
                         "values": [
                             {
                                 "x": "Mon",
@@ -187,7 +187,7 @@
                         ]
                     },
                     {
-                        "key"   : "Issues",
+                        "key"   : "Youth",
                         "values": [
                             {
                                 "x": "Mon",
@@ -222,7 +222,7 @@
                 ],
                 "TW": [
                     {
-                        "key"   : "Closed Issues",
+                        "key"   : "Adult",
                         "values": [
                             {
                                 "x": "Mon",
@@ -255,7 +255,7 @@
                         ]
                     },
                     {
-                        "key"   : "Issues",
+                        "key"   : "Youth",
                         "values": [
                             {
                                 "x": "Mon",
@@ -291,7 +291,7 @@
             },
             "supporting": {
                 "created"   : {
-                    "label": "CREATED",
+                    "label": "Accident",
                     "count": {
                         "2W": 48,
                         "LW": 46,
@@ -406,7 +406,7 @@
                     }
                 },
                 "closed"    : {
-                    "label": "CLOSED",
+                    "label": "",
                     "count": {
                         "2W": 27,
                         "LW": 31,
@@ -992,57 +992,57 @@
             "mainChart"  : {
                 "2W": [
                     {
-                        "label": "Frontend",
-                        "value": 18
+                        "label": "Dentist",
+                        "value": 20
                     },
                     {
-                        "label": "Backend",
+                        "label": "Allergist",
                         "value": 17
                     },
                     {
-                        "label": "Api",
+                        "label": "Cardiologist",
                         "value": 40
                     },
                     {
-                        "label": "Isues",
+                        "label": "Obstetrician",
                         "value": 25
                     }
                 ],
                 "LW": [
-                    {
-                        "label": "Frontend",
-                        "value": 19
-                    },
-                    {
-                        "label": "Backend",
-                        "value": 16
-                    },
-                    {
-                        "label": "Api",
-                        "value": 42
-                    },
-                    {
-                        "label": "Isues",
-                        "value": 23
-                    }
+                  {
+                      "label": "Dentist",
+                      "value": 20
+                  },
+                  {
+                      "label": "Allergist",
+                      "value": 17
+                  },
+                  {
+                      "label": "Cardiologist",
+                      "value": 40
+                  },
+                  {
+                      "label": "Obstetrician",
+                      "value": 25
+                  }
                 ],
                 "TW": [
-                    {
-                        "label": "Frontend",
-                        "value": 15
-                    },
-                    {
-                        "label": "Backend",
-                        "value": 20
-                    },
-                    {
-                        "label": "Api",
-                        "value": 38
-                    },
-                    {
-                        "label": "Isues",
-                        "value": 27
-                    }
+                  {
+                      "label": "Dentist",
+                      "value": 20
+                  },
+                  {
+                      "label": "Allergist",
+                      "value": 17
+                  },
+                  {
+                      "label": "Cardiologist",
+                      "value": 40
+                  },
+                  {
+                      "label": "Obstetrician",
+                      "value": 25
+                  }
                 ]
             },
             "footerLeft" : {

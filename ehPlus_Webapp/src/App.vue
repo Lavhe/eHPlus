@@ -82,6 +82,14 @@
 </template>
 
 <style media="screen">
+  #login{
+      height: 100vh;
+      background-image:url('/static/assets/images/backgrounds/10.jpeg')
+  },
+  body{
+    height:100vh;
+    background-image:url('/static/assets/images/backgrounds/10.jpeg') !important
+  },
   #app{
     padding-top:60px;
   }
