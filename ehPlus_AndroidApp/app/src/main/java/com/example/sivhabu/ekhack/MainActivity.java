@@ -29,6 +29,7 @@ import com.example.sivhabu.ekhack.fragments.NearByAmbulanceFragment;
 import com.example.sivhabu.ekhack.fragments.NearByHospitalFragment;
 import com.example.sivhabu.ekhack.fragments.PreviousMedicalInfoFragment;
 import com.example.sivhabu.ekhack.fragments.ProfileFragment;
+import com.example.sivhabu.ekhack.fragments.QRScannerFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -150,27 +151,33 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         FragmentManager fragmentManager = getSupportFragmentManager();
         final Fragment[] fragment = {new NearByHospitalFragment()};
+        // Handle navigation view item clicks here.
+
         if (id == R.id.nav_near_hospitals) {
             fragment[0] = new NearByHospitalFragment();
         } else if (id == R.id.nav_near_ambulance) {
             fragment[0] = new NearByAmbulanceFragment();
         } else if (id == R.id.nav_qr_scanner) {
-
+            fragment[0] = new QRScannerFragment();
         } else if (id == R.id.nav_previous_medical_info) {
             fragment[0] = new PreviousMedicalInfoFragment();
         } else if (id == R.id.nav_view_profile) {
             fragment[0] = new ProfileFragment();
         } else if (id == R.id.nav_book_appointment) {
             fragment[0] = new BookAppointmentFragment();
+        }else if(id==R.id.nav_join_queue)
+        {
+            fragment[0] = new QRScannerFragment();
+        }
+        else if(id==R.id.nav_login)
+        {
+            fragment[0] = new LoginFragment();
         }
         else if (id == R.id.nav_indoor_navigation) {
             fragment[0] = new IndoorNavigationFragment();
         }
         else if (id == R.id.nav_feedback) {
             fragment[0] = new FeedbackFragment();
-        }
-        else if (id == R.id.nav_login) {
-fragment[0] = new LoginFragment();
         }
         else if (id == R.id.nav_logout)
         {
@@ -188,7 +195,6 @@ fragment[0] = new LoginFragment();
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     try {
                         userTable.child("firebaseToken").removeValue();
-                        firebaseAuth.signOut();
                         fragment[0] = new LoginFragment();
                     }
                     catch(Exception ex){
@@ -202,6 +208,8 @@ fragment[0] = new LoginFragment();
 
                 }
             });
+            firebaseAuth.signOut();
+
         }
 
         fragmentManager.beginTransaction().replace(R.id.main, fragment[0]).commit();
@@ -285,11 +293,11 @@ fragment[0] = new LoginFragment();
         navigationView.getMenu().getItem(0).setVisible(true);//nearby hosipital
         navigationView.getMenu().getItem(1).setVisible(true);//nearby ambulance
         navigationView.getMenu().getItem(2).setVisible(true);//search patient info
-        navigationView.getMenu().getItem(3).setVisible(true);//previous medical infomation
+        navigationView.getMenu().getItem(3).setVisible(false);//previous medical infomation
         navigationView.getMenu().getItem(4).setVisible(true);//view profile
-        navigationView.getMenu().getItem(5).setVisible(true);//book appoitment
-        navigationView.getMenu().getItem(6).setVisible(true);//join queue
-        navigationView.getMenu().getItem(7).setVisible(true);//indoor navigation
+        navigationView.getMenu().getItem(5).setVisible(false);//book appoitment
+        navigationView.getMenu().getItem(6).setVisible(false);//join queue
+        navigationView.getMenu().getItem(7).setVisible(false);//indoor navigation
         navigationView.getMenu().getItem(8).setVisible(false);//feedback
         navigationView.getMenu().getItem(9).setVisible(false);//login
         navigationView.getMenu().getItem(10).setVisible(true);//logout

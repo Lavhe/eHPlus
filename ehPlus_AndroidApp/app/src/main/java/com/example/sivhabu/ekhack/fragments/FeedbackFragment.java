@@ -5,13 +5,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RatingBar;
+import android.widget.Toast;
 
 import com.example.sivhabu.ekhack.MainActivity;
 import com.example.sivhabu.ekhack.R;
@@ -21,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.hsalf.smilerating.SmileRating;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.util.ArrayList;
@@ -42,9 +45,10 @@ public class FeedbackFragment extends Fragment {
     private ArrayList<String> hospitalNames = new ArrayList<String>();
 
     private SearchableSpinner spnrHospitals;
-    private RatingBar ratingBarHospital;
+   // private RatingBar ratingBarHospital;
     private EditText txtMsg;
     private Button btnSubmit;
+    private SmileRating smileRating;
 
     public FeedbackFragment() {
         // Required empty public constructor
@@ -70,12 +74,16 @@ public class FeedbackFragment extends Fragment {
 
         //gui inits
         spnrHospitals = (SearchableSpinner) view.findViewById(R.id.spnrHospitals) ;
-        ratingBarHospital = (RatingBar) view.findViewById(R.id.ratingBarHospital);
+        //ratingBarHospital = (RatingBar) view.findViewById(R.id.ratingBarHospital);
         txtMsg = (EditText) view.findViewById(R.id.txtMsg);
         btnSubmit = (Button) view.findViewById(R.id.btnSubmit);
+        smileRating = (SmileRating) view.findViewById(R.id.smile_rating);
 
-        ratingBarHospital.setMax(5);
-        ratingBarHospital.setNumStars(5);
+
+      /*  ratingBarHospital.setMax(5);
+        ratingBarHospital.setNumStars(5);*/
+
+        smileRating.setSelectedSmile(2);
 
         appointmentTable.addValueEventListener(new ValueEventListener() {
             @Override
@@ -102,20 +110,21 @@ public class FeedbackFragment extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               /* DatabaseReference newFeedback = ref.child("Feedback").push();
+
+                int smiley = smileRating.getSelectedSmile();
+                DatabaseReference newFeedback = ref.child("Feedback").push();
                 newFeedback.child("hospital").setValue(spnrHospitals.getSelectedItem().toString());
                 newFeedback.child("message").setValue(txtMsg.getText().toString());
-                newFeedback.child("stars").setValue(ratingBarHospital.getRating() + "");
+                newFeedback.child("stars").setValue((smileRating.getSelectedSmile() + 1));
                 newFeedback.child("uid").setValue(firebaseAuth.getCurrentUser().getUid());
-*/
 
-                ratingBarHospital.setNumStars(5);
-                /*                                                   Log.i("txtOptMsg.getT", ratingBar + " : " + v + " : " + b);
+                Log.i("smileysmiley",smiley + "");
+               // ratingBarHospital.setNumStars(5);
 
                 Toast.makeText(getContext(),"Thank you!",Toast.LENGTH_LONG).show();
                 Fragment fragment = new NearByHospitalFragment();
                 FragmentManager fragmentManager =  getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.main, fragment).commit();*/
+                fragmentManager.beginTransaction().replace(R.id.main, fragment).commit();
             }
         });
 

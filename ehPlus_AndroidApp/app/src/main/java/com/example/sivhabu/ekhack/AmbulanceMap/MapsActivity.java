@@ -1,4 +1,4 @@
-package com.example.sivhabu.ekhack.map;
+package com.example.sivhabu.ekhack.AmbulanceMap;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -11,11 +11,10 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.sivhabu.ekhack.R;
-import com.example.sivhabu.ekhack.fragments.BookAppointmentFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,16 +43,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
     private GoogleMap mMap;
-    private int PROXIMITY_RADIUS = 1000000;
+    private int PROXIMITY_RADIUS = 10000;
     private Button btnConfirm;
-    private TextView txtDestination;
+    //private TextView txtDestination;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-
+        setContentView(R.layout.activity_maps_ambulance);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -68,7 +66,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //GUI INIT
         btnConfirm = (Button) findViewById(R.id.btnConfirm);
-        txtDestination = (TextView) findViewById(R.id.txtDestination);
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -107,7 +104,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
         }
 
-        String search = "hospital";
+        String search = "USA";
         mMap.clear(); //-26.264106,28.1181198
         latitude = -26.264106;
         longitude = 28.1181198;
@@ -124,7 +121,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                txtDestination.setText(marker.getTitle());
+               // txtDestination.setText(marker.getTitle());
                 return false;
             }
         });
@@ -140,25 +137,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 //go to other user intent
                 Intent intent = new Intent(MapsActivity.this, MainActivity.class);
+
                 startActivity(intent);*/
 
-                BookAppointmentFragment.getBtnBranch().setText(txtDestination.getText().toString());
-                onBackPressed();
+                LatLng origin = new LatLng(-26.2395843,28.1355629);
+                LatLng dest = new LatLng(-26.2643725,28.1233248);
+                ImageView imageView2 = (ImageView) findViewById(R.id.imageView2);
+                imageView2.setVisibility(View.VISIBLE);
+
+               int minutes =  (int)(Math.random() * ((18 - 4) + 1) + 4);
+                btnConfirm.setText("Time Est. " + minutes);
+
+
+
+              Toast.makeText(getApplicationContext(),"An ambulance will arrive within " + minutes + " minutes",Toast.LENGTH_LONG).show();
             }
         });
 
         Button btnBanks = (Button) findViewById(R.id.btnBanks);
         btnBanks.setOnClickListener(new View.OnClickListener() {
-            String search = "hospital";
+            String search = "USA";
             @Override
             public void onClick(View v) {
-                mMap.clear();
-                String url = getUrl(latitude, longitude, search);
-                Object[] DataTransfer = new Object[2];
-                DataTransfer[0] = mMap;
-                DataTransfer[1] = url;
-                GetNearbyBanksData getNearbyBanksData = new GetNearbyBanksData();
-                getNearbyBanksData.execute(DataTransfer);
+
                 Toast.makeText(MapsActivity.this, "These are your Nearby! ", Toast.LENGTH_LONG).show();
             }
         });
@@ -187,15 +188,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private String getUrl(double latitude, double longitude, String nearbyPlace) {
-
         StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlacesUrl.append("location=" + latitude + "," + longitude);
         googlePlacesUrl.append("&radius=" + PROXIMITY_RADIUS);
         googlePlacesUrl.append("&type=" + nearbyPlace);
-        googlePlacesUrl.append("&&name=public%20government");
+        //googlePlacesUrl.append("&&name=public%20government");
         googlePlacesUrl.append("&sensor=true");
         googlePlacesUrl.append("&key=" + "AIzaSyCxkr6e3Hsn9aS0LSwdzRabs2SMEhsDX-I");
+
+
         return (googlePlacesUrl.toString());
+    }
+
+    private String getUrlAmbulanceCall(LatLng origin, LatLng dest) {
+
+        // Origin of route
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+
+        // Destination of route
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+
+
+        // Sensor enabled
+        String sensor = "sensor=false";
+
+        // Building the parameters to the web service
+        String parameters = "&" +str_origin + "&" + str_dest;
+
+        StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/destination/json?");
+        googlePlacesUrl.append("location=" + origin.latitude + "," + origin.longitude);
+        googlePlacesUrl.append("&type=" + "");
+        //googlePlacesUrl.append("&&name=public%20government");
+        googlePlacesUrl.append(parameters);
+        googlePlacesUrl.append("&sensor=true");
+        googlePlacesUrl.append("&key=" + "AIzaSyCxkr6e3Hsn9aS0LSwdzRabs2SMEhsDX-I");
+
+
+
+        return (googlePlacesUrl.toString());
+
     }
 
     @Override
@@ -214,10 +245,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Place current location marker
        /* latitude = location.getLatitude();
         longitude = location.getLongitude();*/
-        latitude = -26.264106;
-        longitude = 28.1181198;
+        latitude = -26.2643725;
+        longitude = 28.1233248;
        /* LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());*/
-        LatLng latLng = new LatLng(-26.264106, 28.1181198);
+        LatLng latLng = new LatLng(-26.2643725,28.1233248);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.title("You are Here!");
@@ -226,7 +257,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
         Toast.makeText(MapsActivity.this, "Your Current Location", Toast.LENGTH_LONG).show();
 
         if (mGoogleApiClient != null) {

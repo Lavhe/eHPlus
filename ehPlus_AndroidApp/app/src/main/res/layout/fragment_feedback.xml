@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
@@ -7,7 +7,7 @@ android:orientation="vertical"
     tools:context="com.example.sivhabu.ekhack.fragments.FeedbackFragment"
 android:weightSum="1">
 
-    <RatingBar
+  <!--  <RatingBar
         android:id="@+id/ratingBarHospital"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,37 +15,43 @@ android:weightSum="1">
         android:layout_centerHorizontal="true"
         android:isIndicator="true"
         android:max="5"
-        android:stepSize="1.0" />
-
-<EditText
-    android:id="@+id/txtMsg"
+        android:stepSize="1.0" />-->
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+    android:id="@+id/spnrHospitals"
     android:layout_width="match_parent"
-    android:hint="type a message"
-    android:layout_height="wrap_content"
-    android:ems="10"
-    android:lines="10"
-    android:padding="20dp"
-    android:background="@drawable/edit_text_border"
-    android:inputType="textMultiLine"
-    android:layout_below="@+id/spnrHospitals"
-    android:layout_alignParentStart="true"
-    android:layout_marginTop="60dp" />
+    android:layout_height="wrap_content"/>
 
-<Button
+    <com.hsalf.smilerating.SmileRating
+        android:id="@+id/smile_rating"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_alignTop="@+id/spnrHospital"
+        android:layout_marginBottom="20dp"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/txtMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/smile_rating"
+        android:background="@drawable/edit_text_border"
+        android:ems="10"
+        android:layout_marginBottom="20dp"
+        android:hint="type a message"
+        android:inputType="textMultiLine"
+        android:lines="10"
+        android:padding="20dp" />
+
+    <Button
     android:id="@+id/btnSubmit"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textColor="#fff"
     android:background="@color/colorPrimary"
     android:text="Submit"
-    android:layout_marginTop="10dp"
-    android:layout_below="@+id/txtMsg"
+    android:layout_alignParentBottom="true"
     android:layout_alignParentStart="true" />
 
-    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-        android:id="@+id/spnrHospitals"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
-</RelativeLayout>
+
+</LinearLayout>
